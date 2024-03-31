@@ -9,7 +9,11 @@ if [[ -z "${RUST_PROJECTS_DIR}" ]]; then
 fi
 
 while read dir; do
-    cargo clean --manifest-path "${dir}/Cargo.toml"
+    if ! cargo clean --manifest-path "${dir}/Cargo.toml" 2> /dev/null; then
+        echo "error: cleaning directory ${dir}"
+    fi
 done < <(find "${RUST_PROJECTS_DIR}" -type d -exec test -e '{}/Cargo.toml' \; -print)
+
+echo "done"
 
 exit 0
